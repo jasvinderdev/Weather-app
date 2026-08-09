@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* margin: 0; */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0f172a;
+            overflow: hidden;
+        }
+
+        .card {
+            width: 420px;
+            height: 580px;
+            border-radius: 24px;
+            background: linear-gradient(180deg,
+                    #2EE8C5 0%,
+                    #43D7ED 55%,
+                    #5E8BFF 100%);
+            padding: 35px 20px 0px;
+            font-family: sans-serif;
+        }
+
+        input {
+            outline: none;
+            width: 250px;
+            height: 50px;
+            border-radius: 30px;
+            padding: 5px 20px;
+            border: 1.5px solid #BFDFFF;
+            transition: 0.3s;
+        }
+
+        input::placeholder {
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4F9DFF;
+            box-shadow: 0 0 10px rgba(79, 157, 255, 0.3);
+        }
+
+        button {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+            border: 1.5px solid #BFDFFF;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button:hover {
+            border-color: #4F9DFF;
+            box-shadow: 0 0 10px rgba(79, 157, 255, 0.3);
+        }
+
+        button img {
+            height: 13px;
+            width: 13px;
+            font-weight: 200px;
+        }
+        
+        .head {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .image img {
+            height: 180px;
+            width: 180px;
+        }
+
+        .image {
+            display: flex;
+            padding: 20px 20px 0px;
+            justify-content: center;
+        }
+
+        .temp {
+            color: white;
+            font-size: 70px;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px 0px;
+        }
+
+        .city {
+            color: white;
+            font-size: 35px;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px 20px 0px;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 60px 20px 0px;
+        }
+
+        .hum .icon img {
+            height: 30px;
+            width: 30px;
+        }
+
+        .wind .icon img {
+            height: 30px;
+            width: 30px;
+        }
+
+        .percent {
+            font-size: 25px;
+            color: white;
+        }
+
+        .speed{
+            font-size: 25px;
+            color: white;
+        }
+
+        .name {
+            color: white;
+            font-size: 16px;
+        }
+
+        .hum,
+        .wind {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+         @media only screen and (max-width: 500px) {
+            .card{
+                 width: 100vw;
+                 height: 100vh;
+                 border-radius: 0;
+                 margin: 0;
+            }
+            body{
+               display: block;
+               background: none;
+               margin: 0;
+               padding: 0;
+            }
+            .card{
+                display: flex;
+                flex-direction: column;
+                gap: 40px;
+            }
+            /* .footer{
+                margin-top: auto;
+            } */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="head">
+            <input class="search" type="text" placeholder="Search city">
+            <button> <img src="weather/search.svg" alt=""> </button>
+        </div>
+        <div class="image">
+            <img src="weather/else.png" alt="">
+        </div>
+        <div class="temp">
+            22°C
+        </div>
+        <div class="city">
+            New York
+        </div>
+        <div class="footer">
+            <div class="hum">
+                <div class="icon">
+                    <img src="weather/humadity.svg" alt="">
+                </div>
+                <div class="content">
+                    <div class="percent">
+                        64
+                    </div>
+                    <div class="name">
+                        Humadity
+                    </div>
+                </div>
+            </div>
+            <div class="wind">
+                <div class="icon">
+                    <img src="weather/wind.svg" alt="">
+                </div>
+                <div class="content">
+                    <div class="speed">
+                      18 km/h
+                    </div>
+                    <div class="name">
+                        Wind Speed
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        //  d0026e8d8ab2b4174a679ece6974b7f6
+         async function getdata() {
+            document.querySelector("button").addEventListener("click", async ()=>{
+            let cityname = document.querySelector(".search")
+            let input = cityname.value
+                if(input == ""){
+                    return
+                }
+                else{
+                    let x = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${input}&appid=${API_key}&units=metric`)
+                    let data = await x.json()
+                    return update(data)      
+                    // console.log(data);       
+                }
+            })
+            document.querySelector("input").addEventListener("keyup", async (e)=>{
+            let cityname = document.querySelector(".search")
+            let input = cityname.value
+                if(e.key == "Enter"){
+                     let x = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${input}&appid=d0026e8d8ab2b4174a679ece6974b7f6&units=metric`)
+                    let data = await x.json()
+                    return update(data) 
+                }
+            })
+         }
+         
+         async function update(data){
+            console.log(data.weather[0].main);
+            console.log(data.weather[0].description);
+            
+            
+            let temperature = Math.floor( data.main.temp)
+            let humadity = await data.main.humidity
+            let windspeed = await data.wind.speed
+            let city = await data.name
+
+            document.querySelector(".temp").innerHTML = `${temperature}°C`
+            document.querySelector(".city").innerHTML = `${city}`
+            document.querySelector(".percent").innerHTML = `${humadity}%`
+            document.querySelector(".speed").innerHTML = `${windspeed} km/h`
+
+            let condition = data.weather[0].main
+
+            if(condition == "Clear"){
+                document.querySelector(".image img").src = "weather/sun.png"
+            }
+            else if(condition == "Clouds"){
+                document.querySelector(".image img").src = "weather/clouds.png"
+            }
+            else if(condition == "Rain"){
+                document.querySelector(".image img").src = "weather/rainy-day.png"
+            }
+            else if(condition == "Snow"){
+                document.querySelector(".image img").src = "weather/snow.png"
+            }
+            else if(condition == "Thunderstorm"){
+                document.querySelector(".image img").src = "weather/storm.png"
+            }
+            else if(condition == "Fog" || condition == "Haze" || condition == "Mist"){
+                document.querySelector(".image img").src = "weather/mist.png"
+            }
+            else if(condition == "Drizzle"){
+                document.querySelector(".image img").src = "weather/dizzy.png"
+            }
+            else{
+                document.querySelector(".imag img").src = "weather/else.png"
+            }
+
+         }
+         getdata()
+         
+    </script>
+</body>
+
+</html>
